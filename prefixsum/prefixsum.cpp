@@ -68,7 +68,7 @@ int main (int argc, char* argv[]) {
     for(int i = start; i < end; i++){
       partial_sum += arr[i];
       std::cout << " Element " << i << " is " << arr[i] << std::endl;
-      std::cout << "Partial Sum" << partial_sum << std::endl;
+      std::cout << "Partial Sum is " << partial_sum << std::endl;
       pr[i] = partial_sum;
     }
     suma[id] = partial_sum;
