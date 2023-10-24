@@ -73,16 +73,16 @@ int main (int argc, char* argv[]) {
   }
 
   #pragma omp barrier
-  {
     int total_sum = 0;
-    for(int i = 0; i < nbThreads; i++){
-      total_sum += suma[i];
-      if(i < n) {
-        pr[i] += total_sum;
+    #pragma omp parallel num_threads(nbThreads)
+    {
+      int id = omp_get_thread_num();
+      if (id < n) {
+        total_sum += suma[id];
+        pr[id] += total_sum;
       }
     }
-  }
-  
+
   // end time
   std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
   std::chrono::duration<double> elapased_seconds = end-start;
