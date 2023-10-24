@@ -45,7 +45,7 @@ int main (int argc, char* argv[]) {
   int * arr = new int [n];
   //generatePrefixSumData (arr, n);
   for(int i = 0; i < n; i++){
-    arr[i] = 1;
+    arr[i] = i;
   }
 
   int * pr = new int [n+1];
