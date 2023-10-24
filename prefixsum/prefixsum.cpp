@@ -43,10 +43,10 @@ int main (int argc, char* argv[]) {
   int n = atoi(argv[1]);
   int nbThreads = atoi(argv[2]);
   int * arr = new int [n];
-  // generatePrefixSumData (arr, n);
-  for(int i = 0; i < n; i++){
-    arr[i] = i;
-  }
+  generatePrefixSumData (arr, n);
+  // for(int i = 0; i < n; i++){
+  //   arr[i] = i;
+  // }
 
   int * pr = new int [n+1];
 
@@ -71,23 +71,16 @@ int main (int argc, char* argv[]) {
 
         int sum = 0;
         for (int i = start; i < end; i++) {
-          sum += arr[i];
-          pr[i + 1] = sum; // Calculate the exclusive prefix sum
+            pr[i + 1] = sum; // Calculate the exclusive prefix sum
+            sum += arr[i];
         }
         suma[id + 1] = sum;
 
         #pragma omp barrier
 
-        if (id > 0) {
-            int prev_sum = suma[id - 1];
-            for (int i = start; i < end; i++) {
-                pr[i ] += prev_sum;
-            }
-        }
-
-        int last_sum = suma[nbThreads - 1];
+        int prev_sum = suma[id];
         for (int i = start; i < end; i++) {
-            pr[i + 1] += last_sum;
+            pr[i + 1] += prev_sum;
         }
     }
   
