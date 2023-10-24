@@ -69,20 +69,21 @@ int main (int argc, char* argv[]) {
             end += rem;
         }
 
-        int sum = 0;
+        int partial_sum = 0;
         pr[start] = 0;
         for (int i = start; i < end; i++) {
-            pr[i + 1] = sum; // Calculate the exclusive prefix sum
-            sum += arr[i];
+            partial_sum += arr[i];
+            pr[i + 1] = partial_sum;
         }
-        suma[id + 1] = sum;
+        suma[id + 1] = partial_sum;
 
         #pragma omp barrier
 
-        int prev_sum = suma[id];
-        for (int i = start; i < end; i++) {
-            pr[i + 1] += prev_sum;
+        int prev_sum = suma[id + 1];
+        for (int i = id + 1; i < nbThreads; i++) {
+            pr[(i + 1) * size_chunk] += prev_sum;
         }
+
     }
   
   // end time
