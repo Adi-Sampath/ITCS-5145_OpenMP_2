@@ -78,12 +78,23 @@ int main (int argc, char* argv[]) {
         suma[id + 1] = partial_sum;
 
         #pragma omp barrier
-        if(id > 0) {
-            int prev_sum = suma[id - 1];
-            for (int i = start; i < end; i++) {
-                pr[i] += prev_sum;
-            }
+        int sum = 0;
 
+        #pragma omp parallel num_threads(nbThreads)
+        {
+          int id = omp_get_thread_num();
+          int start = id * size_chunk;
+          int end = start + size_chunk;
+          if (id == nbThreads - 1) {
+              end += rem;
+          }
+          for(int j = 0; j < id + 1; j++) {
+            sum += suma[j];
+          }
+          
+          for (int i = start; i < end; i++) {
+            pr[i] = sum + pr[i];
+          }
         }
         #pragma omp barrier
     }
