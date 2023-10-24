@@ -56,30 +56,32 @@ int main (int argc, char* argv[]) {
   // start timing
   std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
 
-  #pragma omp parallel num_threads(nbThreads)
+  #pragma omp parallel num_threads(nbThreads) reduction(+:sum)
   {
     int id = omp_get_thread_num();
     int start = id * size_chunk;
     int end = start + size_chunk;
-    if(id == nbThreads - 1){
-      end += rem;
+    if (id == nbThreads - 1) {
+        end += rem;
     }
-    int sum = 0;
-    for(int i = start; i < end; i++){
-      sum += arr[i];
-      pr[i+1] = sum;
+    int thread_sum = 0;
+    for (int i = start; i < end; i++) {
+        thread_sum += arr[i];
+        pr[i + 1] = thread_sum;
     }
-    suma[id] = sum;
+    suma[id] = thread_sum;
   }
+
 
   #pragma omp barrier
   int sum = 0;
   for (int i = 0; i < nbThreads; i++) {
-        sum += suma[i];
-        if (i < n) {
-            pr[i] += sum;
-        }
+    sum += suma[i];
+    if (i < n) {
+        pr[i] += sum;
     }
+}
+
 
   // end time
   std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
