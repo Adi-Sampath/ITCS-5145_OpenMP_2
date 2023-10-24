@@ -52,37 +52,34 @@ int main (int argc, char* argv[]) {
 
   int size_chunk = n/nbThreads;
   int rem = n % nbThreads;
-  int sum = 0;
+  int partial_sum = 0;
 
   // start timing
   std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
 
-  #pragma omp parallel num_threads(nbThreads) reduction(+:sum)
+  #pragma omp parallel num_threads(nbThreads) reduction(+:partial_sum)
   {
     int id = omp_get_thread_num();
     int start = id * size_chunk;
     int end = start + size_chunk;
-    if (id == nbThreads - 1) {
-        end += rem;
+    if(id == nbThreads - 1){
+      end += rem;
     }
-    int thread_sum = 0;
-    for (int i = start; i < end; i++) {
-        thread_sum += arr[i];
-        pr[i + 1] = thread_sum;
+    for(int i = start; i < end; i++){
+      partial_sum += arr[i];
+      pr[i+1] = partial_sum;
     }
-    suma[id] = thread_sum;
+    suma[id] = partial_sum;
   }
 
-
   #pragma omp barrier
-  for (int i = 0; i < nbThreads; i++) {
-    sum += suma[i];
-    if (i < n) {
-        pr[i] += sum;
+  int total_sum = 0;
+  for(int i = 0; i < nbThreads; i++){
+    total_sum += suma[i];
+    if(i < n) {
+      pr[i] += total_sum;
     }
-}
-
-
+  }
   // end time
   std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
   std::chrono::duration<double> elapased_seconds = end-start;
