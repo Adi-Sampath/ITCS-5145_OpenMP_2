@@ -84,7 +84,7 @@ int main (int argc, char* argv[]) {
   int left, mid, right;
   int tid;
   #pragma omp for schedule(static, chunk) private(i, j, left, mid, right, tid)
-  for (i = 1; i <= n - 1; i = (2 * i)) {
+  for (i = 1; i <= n - 1; i *= 2) {
     for (j = 0; j < n - 1; j += (2 * i)) {
       left = j;
       mid = j + i - 1;
