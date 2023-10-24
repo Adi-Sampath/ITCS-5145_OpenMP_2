@@ -79,13 +79,11 @@ int main (int argc, char* argv[]) {
 
         #pragma omp barrier
         if(id > 0) {
-            int offset = 0;
-            for (int i = 0; i < id; i++) {
-                offset += suma[i];
-            }
+            int prev_sum = suma[id - 1];
             for (int i = start; i < end; i++) {
-                pr[i + 1] += offset;
+                pr[i + 1] += prev_sum;
             }
+
         }
         #pragma omp barrier
     }
