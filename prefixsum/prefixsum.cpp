@@ -68,7 +68,7 @@ int main (int argc, char* argv[]) {
     if(id == nbThreads - 1){
       end += rem;
     } 
-    pr[0] = 0;
+    
     for(int i = start; i < end; i++){
       partial_sum += arr[i];
       std::cout << "Element " << i << " is " << arr[i] << std::endl;
@@ -79,16 +79,18 @@ int main (int argc, char* argv[]) {
   }
 
   #pragma omp barrier
-    int total_sum = 0;
+    int sum = 0;
     #pragma omp parallel num_threads(nbThreads)
     {
-      int id = omp_get_thread_num();
-      std::cout << "Thread " << id << " has sum " << suma[id] << std::endl;
-      if (id < n) {
-        total_sum += suma[id];
-        pr[id] += total_sum;
-        std::cout << "Total Sum is " << total_sum << std::endl;
-      }
+        int id = omp_get_thread_num();
+        int start = id * size_chunk;
+        int end = start + size_chunk;
+        if (id == nbThreads - 1) {
+            end += rem;
+        }
+        for (int i = start; i < end; i++) {
+            pr[i] = sum + pr[i];
+        }
     }
 
   // end time
