@@ -95,6 +95,7 @@ int main (int argc, char* argv[]) {
   checkPrefixSumResult(pr, n);
 
   delete[] arr;
+  delete[] suma;
 
   return 0;
 }
