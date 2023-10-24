@@ -87,6 +87,7 @@ int main (int argc, char* argv[]) {
       if (id < n) {
         total_sum += suma[id];
         pr[id] += total_sum;
+        std::cout << "Total Sum is " << total_sum << std::endl;
       }
     }
 
