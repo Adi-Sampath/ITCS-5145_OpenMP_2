@@ -77,7 +77,7 @@ int main (int argc, char* argv[]) {
   for(int i = 0; i < nbThreads; i++){
     total_sum += suma[i];
     if(i < n) {
-      pr[i] += total_sum;
+      pr[i + 1] += total_sum;
     }
   }
   // end time
