@@ -84,6 +84,8 @@ int main (int argc, char* argv[]) {
           std::cout << "prev_sum: " << prev_sum << "\nindex: "<< (j * size_chunk) << std::endl;
           pr[j * size_chunk] += prev_sum;
         }
+
+        #pragma omp barrier
     }
   
   // end time
