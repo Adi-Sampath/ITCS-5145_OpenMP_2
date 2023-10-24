@@ -81,7 +81,7 @@ int main (int argc, char* argv[]) {
         if(id > 0) {
             int prev_sum = suma[id - 1];
             for (int i = start; i < end; i++) {
-                pr[i + 1] += prev_sum;
+                pr[i] += prev_sum;
             }
 
         }
