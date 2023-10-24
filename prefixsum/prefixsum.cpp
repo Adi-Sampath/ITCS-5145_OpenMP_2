@@ -79,6 +79,7 @@ int main (int argc, char* argv[]) {
     #pragma omp parallel num_threads(nbThreads)
     {
       int id = omp_get_thread_num();
+      std::cout << "Thread " << id << " has sum " << suma[id] << std::endl;
       if (id < n) {
         total_sum += suma[id];
         pr[id] += total_sum;
