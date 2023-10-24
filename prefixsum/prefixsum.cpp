@@ -93,7 +93,7 @@ int main (int argc, char* argv[]) {
           }
 
           for (int i = start; i < end; i++) {
-            pr[i + 1] = sum + pr[i];
+            pr[i] = sum + pr[i - 1];
           }
         }
         #pragma omp barrier
