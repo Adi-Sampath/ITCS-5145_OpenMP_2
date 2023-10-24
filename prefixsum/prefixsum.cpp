@@ -57,7 +57,7 @@ int main (int argc, char* argv[]) {
   // start timing
   std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
 
-  #pragma omp parallel num_threads(nbThreads) reduction(+:partial_sum) nowait
+  #pragma omp parallel num_threads(nbThreads) reduction(+:partial_sum) 
   {
     int id = omp_get_thread_num();
     int start = id * size_chunk;
