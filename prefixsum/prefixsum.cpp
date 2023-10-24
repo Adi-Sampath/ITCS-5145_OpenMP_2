@@ -70,6 +70,7 @@ int main (int argc, char* argv[]) {
         }
 
         int sum = 0;
+        pr[start] = 0;
         for (int i = start; i < end; i++) {
             pr[i + 1] = sum; // Calculate the exclusive prefix sum
             sum += arr[i];
