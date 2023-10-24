@@ -51,8 +51,7 @@ int main (int argc, char* argv[]) {
   int * pr = new int [n+1];
 
   //insert prefix sum code here
-  int* suma = new int[nbThreads];
-  suma[0] = 0;
+  int* suma;
 
   int size_chunk = n / nbThreads;
   int rem = n % nbThreads;
@@ -64,22 +63,24 @@ int main (int argc, char* argv[]) {
   #pragma omp parallel num_threads(nbThreads) 
   {
     int id = omp_get_thread_num();
+    #pragma omp single
+    {
+      suma = new int [nbThreads];
+      suma[0] = 0;
+    }
+
     int start = id * size_chunk;
     int end = start + size_chunk;
     if(id == nbThreads - 1){
       end += rem;
-    } 
-    
+    }
     int partial_sum = 0;
+    #pragma omp for schedule(static)
     for(int i = start; i < end; i++){
       partial_sum += arr[i];
-      std::cout << "Element " << i << " is " << arr[i] << std::endl;
-      std::cout << "Partial Sum is " << partial_sum << std::endl;
-      pr[i] = partial_sum;
+      pr[i + 1] = partial_sum;
     }
-    if(id > 0) {
-      suma[id] = partial_sum;
-    }
+    suma[id + 1] = partial_sum;
   }
 
   #pragma omp barrier
