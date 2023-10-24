@@ -43,7 +43,10 @@ int main (int argc, char* argv[]) {
   int n = atoi(argv[1]);
   int nbThreads = atoi(argv[2]);
   int * arr = new int [n];
-  generatePrefixSumData (arr, n);
+  //generatePrefixSumData (arr, n);
+  for(int i = 0; i < n; i++){
+    arr[i] = 1;
+  }
 
   int * pr = new int [n+1];
 
@@ -56,18 +59,20 @@ int main (int argc, char* argv[]) {
   // start timing
   std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
 
+  int partial_sum = 0;
   #pragma omp parallel num_threads(nbThreads) reduction(+:partial_sum) 
   {
     int id = omp_get_thread_num();
-    int start = id * size_chunk + (id < rem ? id : rem);
-    int end = start + size_chunk + (id < rem ? 1 : 0);
-    int partial_sum = 0;
-    
+    int start = id * size_chunk;
+    int end = start + size_chunk;
+    if(id == nbThreads - 1){
+      end += rem;
+    } 
     for(int i = start; i < end; i++){
       partial_sum += arr[i];
       std::cout << "Element " << i << " is " << arr[i] << std::endl;
       std::cout << "Partial Sum is " << partial_sum << std::endl;
-      pr[i+1] = partial_sum;
+      pr[i] = partial_sum;
     }
     suma[id] = partial_sum;
   }
