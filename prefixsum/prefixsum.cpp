@@ -78,13 +78,14 @@ int main (int argc, char* argv[]) {
         suma[id + 1] = partial_sum;
 
         #pragma omp barrier
+        for(int k = 0; k < nbThreads; k++) {
+            std::cout << suma[k] << " ";
+        }
 
         int prev_sum = suma[id + 1];
         for(int j = id + 1; j < nbThreads; j++) {
-          std::cout << "prev_sum: " << prev_sum << "\nindex: "<< (j * size_chunk) << std::endl;
-          pr[j * size_chunk] += prev_sum;
+          pr[(j + 1) * size_chunk] += prev_sum;
         }
-
         #pragma omp barrier
     }
   
