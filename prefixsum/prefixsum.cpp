@@ -52,6 +52,7 @@ int main (int argc, char* argv[]) {
 
   int size_chunk = n/nbThreads;
   int rem = n % nbThreads;
+  int sum = 0;
 
   // start timing
   std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
@@ -74,7 +75,6 @@ int main (int argc, char* argv[]) {
 
 
   #pragma omp barrier
-  int sum = 0;
   for (int i = 0; i < nbThreads; i++) {
     sum += suma[i];
     if (i < n) {
