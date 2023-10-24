@@ -50,7 +50,7 @@ int main (int argc, char* argv[]) {
   //insert prefix sum code here
   int* suma = new int[nbThreads];
 
-  int size_chunk = n/nbThreads;
+  int size_chunk = n / nbThreads;
   int rem = n % nbThreads;
   int partial_sum = 0;
 
@@ -73,15 +73,16 @@ int main (int argc, char* argv[]) {
   }
 
   #pragma omp barrier
-  int total_sum = 0;
-  for(int i = 0; i < nbThreads; i++){
-    total_sum += suma[i];
-    if(i != 0){
-      for(int j = i * size_chunk; j < (i+1) * size_chunk; j++){
-        pr[j] += total_sum;
+  {
+    int total_sum = 0;
+    for(int i = 0; i < nbThreads; i++){
+      total_sum += suma[i];
+      if(i < n) {
+        pr[i] += total_sum;
       }
     }
   }
+  
   // end time
   std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
   std::chrono::duration<double> elapased_seconds = end-start;
