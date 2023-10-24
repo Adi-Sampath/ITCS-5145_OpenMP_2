@@ -59,37 +59,45 @@ int main (int argc, char* argv[]) {
   // start timing
   std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
 
-
-  #pragma omp parallel num_threads(nbThreads) 
+  #pragma omp parallel num_threads(nbThreads)
   {
     int id = omp_get_thread_num();
-    #pragma omp single
-    {
-      suma = new int [nbThreads];
-      suma[0] = 0;
+    int start = id * size_chunk;
+    int end = start + size_chunk;
+    if(id == nbThreads - 1){
+      end += rem;
     }
-
-    int partial_sum = 0;
+    int sum = 0;
     #pragma omp for schedule(static) nowait
-    for(int i = 0; i < n; i++){
-      partial_sum += arr[i];
-      pr[i] = partial_sum;
-    }
-    suma[id + 1] = partial_sum;
+      for(int i = start; i < end; i++){
+        sum += arr[i];
+        pr[i+1] = sum;
+      }
+      suma[id] = sum;
+  }
 
   #pragma omp barrier
-    int offset = 0;
-    for(int i = 1; i < (nbThreads + 1); i++){
-      offset += suma[i];
-    }
-
-  #pragma omp for schedule(static)
-    for(int i = 0; i < n; i++){
-      pr[i] += offset;
-    }
+  int offset = 0;
+  for(int i = 0; i < nbThreads; i++){
+    pr[offset] = 0;
+    offset += suma[i];
   }
-  free(suma);
 
+  #pragma omp parallel num_threads(nbThreads)
+  {
+    int id = omp_get_thread_num();
+    int start = id * size_chunk;
+    int end = start + size_chunk;
+    if(id == nbThreads - 1){
+      end += rem;
+    }
+    int sum = pr[start];
+    #pragma omp for schedule(static) nowait
+      for(int i = start; i < end; i++){
+        pr[i+1] += sum;
+      }
+  }
+  
   // end time
   std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
   std::chrono::duration<double> elapased_seconds = end-start;
