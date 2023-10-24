@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# common params
+THREADS="1 2 4 8 12 16"
+
+# prefixsum 
+PREFIXSUM_NS="10000 1000000 100000000 1000000000"
+
+# mergesort params
+MERGESORT_NS="10000 1000000 1000000000"
