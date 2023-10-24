@@ -79,23 +79,13 @@ int main (int argc, char* argv[]) {
 
         #pragma omp barrier
         int sum = 0;
-
-        #pragma omp parallel num_threads(nbThreads)
-        {
-          int id = omp_get_thread_num();
-          int start = id * size_chunk;
-          int end = start + size_chunk;
-          if (id == nbThreads - 1) {
-              end += rem;
-          }
-          for(int j = 0; j < id; j++) {
-            sum += suma[j];
-          }
-
-          for (int i = start; i < end; i++) {
-            pr[i] = sum + pr[i];
-          }
+        for(int i = 0; i < id + 1; i++) {
+            sum += suma[i];
         }
+        for (int i = start; i < end; i++) {
+            pr[i + 1] += sum;
+        }
+        
         #pragma omp barrier
     }
   
