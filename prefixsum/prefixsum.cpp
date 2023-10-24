@@ -70,7 +70,6 @@ int main (int argc, char* argv[]) {
         }
 
         int partial_sum = 0;
-        pr[start] = 0;
         for (int i = start; i < end; i++) {
             partial_sum += arr[i];
             pr[i + 1] = partial_sum;
@@ -85,7 +84,7 @@ int main (int argc, char* argv[]) {
         for (int i = start; i < end; i++) {
             pr[i + 1] += sum;
         }
-        
+
         #pragma omp barrier
     }
   
