@@ -43,10 +43,10 @@ int main (int argc, char* argv[]) {
   int n = atoi(argv[1]);
   int nbThreads = atoi(argv[2]);
   int * arr = new int [n];
-  //generatePrefixSumData (arr, n);
-  for(int i = 0; i < n; i++){
-    arr[i] = i;
-  }
+  generatePrefixSumData (arr, n);
+  // for(int i = 0; i < n; i++){
+  //   arr[i] = i;
+  // }
 
   int * pr = new int [n+1];
 
@@ -68,11 +68,12 @@ int main (int argc, char* argv[]) {
     if(id == nbThreads - 1){
       end += rem;
     } 
+    pr[0] = 0;
     for(int i = start; i < end; i++){
       partial_sum += arr[i];
       std::cout << "Element " << i << " is " << arr[i] << std::endl;
       std::cout << "Partial Sum is " << partial_sum << std::endl;
-      pr[i] = partial_sum;
+      pr[i + 1] = partial_sum;
     }
     suma[id] = partial_sum;
   }
