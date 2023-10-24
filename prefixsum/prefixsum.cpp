@@ -88,12 +88,12 @@ int main (int argc, char* argv[]) {
           if (id == nbThreads - 1) {
               end += rem;
           }
-          for(int j = 0; j < id + 1; j++) {
+          for(int j = 0; j < id; j++) {
             sum += suma[j];
           }
 
           for (int i = start; i < end; i++) {
-            pr[i] = sum + pr[i - 1];
+            pr[i] = sum + pr[i];
           }
         }
         #pragma omp barrier
