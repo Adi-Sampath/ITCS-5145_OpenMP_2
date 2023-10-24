@@ -6,88 +6,95 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-void generateMergeSortData(int *arr, size_t n);
-void checkMergeSortResult(int *arr, size_t n);
+void generateMergeSortData(int* arr, size_t n);
+void checkMergeSortResult(int* arr, size_t n);
 #ifdef __cplusplus
 }
 #endif
 
-void merge(int *arr, int l[], int r[], int l_size, int r_size) {
-  int i = 0, j = 0, k = 0;
+void merge(int* arr, int left, int mid, int right) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+    int* L = new int[n1];
+    int* R = new int[n2];
 
-  while (i < l_size && j < r_size) {
-    if (l[i] <= r[j]) {
-      arr[k] = l[i];
-      i++;
-    } else {
-      arr[k] = r[j];
-      j++;
-    }
-    k++;
-  }
+    for (int i = 0; i < n1; i++) L[i] = arr[left + i];
+    for (int j = 0; j < n2; j++) R[j] = arr[mid + 1 + j];
 
-  while (i < l_size) {
-    arr[k] = l[i];
-    i++;
-    k++;
-  }
-  while (j < r_size) {
-    arr[k] = r[j];
-    j++;
-    k++;
-  }
-}
-
-void parallelMergeSort(int arr[], int n) {
-  if (n > 1) {
-    int mid = n / 2;
-    int *left = arr;
-    int *right = arr + mid;
-
-    #pragma omp parallel
-    {
-      #pragma omp for
-      for (int i = 0; i < 2; i++) {
-        if (i == 0) {
-          parallelMergeSort(left, mid);
+    int i = 0, j = 0, k = left;
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
         } else {
-          parallelMergeSort(right, n - mid);
+            arr[k] = R[j];
+            j++;
         }
-      }
+        k++;
     }
 
-    merge(arr, left, right, mid, n - mid);
-  }
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+
+    delete[] L;
+    delete[] R;
 }
 
-int main(int argc, char *argv[]) {
-  if (argc < 3) {
-    std::cerr << "Usage: " << argv[0] << " <n> <nbthreads>" << std::endl;
-    return -1;
-  }
+void parallelMergeSort(int* arr, int n, int numThreads) {
+    int curr_size;
 
-  int n = atoi(argv[1]);
-  int numThreads = atoi(argv[2]);
+    for (curr_size = 1; curr_size <= n - 1; curr_size = 2 * curr_size) {
+        #pragma omp parallel for num_threads(numThreads)
+        for (int left = 0; left < n - 1; left += 2 * curr_size) {
+            int mid = std::min(left + curr_size - 1, n - 1);
+            int right = std::min(left + 2 * curr_size - 1, n - 1);
+            merge(arr, left, mid, right);
+        }
+    }
+}
 
-  // get arr data
-  int *arr = new int[n];
-  generateMergeSortData(arr, n);
+int main(int argc, char* argv[]) {
+    if (argc < 3) {
+        std::cerr << "Usage: " << argv[0] << " <n> <nbthreads>" << std::endl;
+        return -1;
+    }
 
-  // start timing
-  std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
+    int n = atoi(argv[1]);
+    int numThreads = atoi(argv[2]);
 
-  omp_set_num_threads(numThreads);
-  parallelMergeSort(arr, n);
+    // Set the number of OpenMP threads
+    omp_set_num_threads(numThreads);
 
-  // end time
-  std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
-  std::chrono::duration<double> elapsed_seconds = end - start;
-  // Print the total execution time (in sec) to the error stream
-  std::cerr << elapsed_seconds.count() << std::endl;
+    // Get arr data
+    int* arr = new int[n];
+    generateMergeSortData(arr, n);
 
-  checkMergeSortResult(arr, n);
+    // Start timing
+    std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
 
-  delete[] arr;
+    // Perform parallel merge sort
+    parallelMergeSort(arr, n, numThreads);
 
-  return 0;
+    // End timing
+    std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end - start;
+
+    // Print the total execution time (in seconds) to the error stream
+    std::cerr << "Execution time: " << elapsed_seconds.count() << " seconds" << std::endl;
+
+    // Check the result
+    checkMergeSortResult(arr, n);
+
+    delete[] arr;
+
+    return 0;
 }
