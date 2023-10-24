@@ -65,7 +65,6 @@ int main (int argc, char* argv[]) {
     if(id == nbThreads - 1){
       end += rem;
     }
-    pr[start] = partial_sum;
     for(int i = start; i < end; i++){
       partial_sum += arr[i];
       std::cout << partial_sum << std::endl;
