@@ -79,7 +79,7 @@ int main (int argc, char* argv[]) {
 
         #pragma omp barrier
         for(int k = 0; k < nbThreads; k++) {
-            std::cout << suma[k] << " ";
+            std::cout << suma[k] << " " << std::endl;
         }
 
         int prev_sum = suma[id + 1];
