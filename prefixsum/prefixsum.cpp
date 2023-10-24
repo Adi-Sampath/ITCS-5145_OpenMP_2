@@ -84,6 +84,11 @@ int main (int argc, char* argv[]) {
                 pr[i + 1] += prev_sum;
             }
         }
+
+        int last_sum = suma[nbThreads - 1];
+        for (int i = start; i < end; i++) {
+            pr[i + 1] += last_sum;
+        }
     }
   
   // end time
