@@ -80,8 +80,8 @@ int main (int argc, char* argv[]) {
         #pragma omp barrier
 
         int prev_sum = suma[id + 1];
-        for (int i = id + 1; i < nbThreads; i++) {
-            pr[(i + 1) * size_chunk] += prev_sum;
+        for(int j = id + 1; j < nbThreads; ++j) {
+          pr[j * size_chunk] += prev_sum;
         }
 
     }
