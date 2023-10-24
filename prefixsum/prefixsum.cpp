@@ -75,7 +75,7 @@ int main (int argc, char* argv[]) {
       end += rem;
     }
     int partial_sum = 0;
-    #pragma omp for schedule(static)
+    #pragma omp for schedule(static) nowait
     for(int i = start; i < end; i++){
       partial_sum += arr[i];
       pr[i] = partial_sum;
