@@ -67,6 +67,7 @@ int main (int argc, char* argv[]) {
     }
     for(int i = start; i < end; i++){
       partial_sum += arr[i];
+      std::cout << arr[i] << std::endl;
       std::cout << partial_sum << std::endl;
       pr[i] = partial_sum;
     }
