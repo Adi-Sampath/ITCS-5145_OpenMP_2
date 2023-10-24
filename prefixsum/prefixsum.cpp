@@ -76,23 +76,25 @@ int main (int argc, char* argv[]) {
       std::cout << "Partial Sum is " << partial_sum << std::endl;
       pr[i] = partial_sum;
     }
-    suma[id] = partial_sum;
+    if(id > 0) {
+      suma[id] = partial_sum;
+    }
   }
 
   #pragma omp barrier
-    int sum = 0;
-    #pragma omp parallel num_threads(nbThreads)
-    {
-        int id = omp_get_thread_num();
-        int start = id * size_chunk;
-        int end = start + size_chunk;
-        if (id == nbThreads - 1) {
-            end += rem;
-        }
-        for (int i = start; i < end; i++) {
-            pr[i] = sum + pr[i];
-        }
+  for(int i = 1; i < nbThreads; i++){
+    suma[i] += suma[i-1];
+  }
+  int offset = 0;
+  for(int i = 1; i < nbThreads; i++){
+    offset += size_chunk;
+    if(i == nbThreads - 1){
+      offset += rem;
     }
+    for(int j = offset; j < n; j++){
+      pr[j] += suma[i-1];
+    }
+  }
 
   // end time
   std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
