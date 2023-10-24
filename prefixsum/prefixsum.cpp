@@ -43,15 +43,16 @@ int main (int argc, char* argv[]) {
   int n = atoi(argv[1]);
   int nbThreads = atoi(argv[2]);
   int * arr = new int [n];
-  generatePrefixSumData (arr, n);
-  // for(int i = 0; i < n; i++){
-  //   arr[i] = i;
-  // }
+  // generatePrefixSumData (arr, n);
+  for(int i = 0; i < n; i++){
+    arr[i] = i;
+  }
 
   int * pr = new int [n+1];
 
   //insert prefix sum code here
-  int* suma;
+  int* suma = new int[nbThreads];
+  suma[0] = 0;
 
   int size_chunk = n / nbThreads;
   int rem = n % nbThreads;
@@ -73,30 +74,17 @@ int main (int argc, char* argv[]) {
         sum += arr[i];
         pr[i+1] = sum;
       }
-      suma[id] = sum;
-  }
-
-  #pragma omp barrier
-  int offset = 0;
-  for(int i = 0; i < nbThreads; i++){
-    pr[offset] = 0;
-    offset += suma[i];
-  }
-
-  #pragma omp parallel num_threads(nbThreads)
-  {
-    int id = omp_get_thread_num();
-    int start = id * size_chunk;
-    int end = start + size_chunk;
-    if(id == nbThreads - 1){
-      end += rem;
-    }
-    int sum = pr[start];
-    #pragma omp for schedule(static) nowait
-      for(int i = start; i < end; i++){
-        pr[i+1] += sum;
+      suma[id + 1] = sum;
+    
+    #pragma omp barrier
+      if(id > 0) {
+        for(int i = start; i < end; i++){
+          pr[i+1] += suma[id];
+        }
       }
   }
+
+
   
   // end time
   std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
