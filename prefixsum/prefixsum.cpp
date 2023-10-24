@@ -43,10 +43,10 @@ int main (int argc, char* argv[]) {
   int n = atoi(argv[1]);
   int nbThreads = atoi(argv[2]);
   int * arr = new int [n];
-  // generatePrefixSumData (arr, n);
-  for(int i = 0; i < n; i++){
-    arr[i] = i;
-  }
+  generatePrefixSumData (arr, n);
+  // for(int i = 0; i < n; i++){
+  //   arr[i] = i;
+  // }
 
   int * pr = new int [n+1];
 
