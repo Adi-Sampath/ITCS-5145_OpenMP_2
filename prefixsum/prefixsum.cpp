@@ -91,9 +91,9 @@ int main (int argc, char* argv[]) {
           for(int j = 0; j < id + 1; j++) {
             sum += suma[j];
           }
-          
+
           for (int i = start; i < end; i++) {
-            pr[i] = sum + pr[i];
+            pr[i + 1] = sum + pr[i];
           }
         }
         #pragma omp barrier
