@@ -69,31 +69,26 @@ int main (int argc, char* argv[]) {
       suma[0] = 0;
     }
 
-    int start = id * size_chunk;
-    int end = start + size_chunk;
-    if(id == nbThreads - 1){
-      end += rem;
-    }
     int partial_sum = 0;
     #pragma omp for schedule(static) nowait
-    for(int i = start; i < end; i++){
+    for(int i = 0; i < n; i++){
       partial_sum += arr[i];
       pr[i] = partial_sum;
     }
-    suma[id] = partial_sum;
-  }
+    suma[id + 1] = partial_sum;
 
   #pragma omp barrier
-  int offset = 0;
-  for(int i = 1; i < nbThreads; i++){
-    offset += suma[i];
-  }
+    int offset = 0;
+    for(int i = 1; i < (nbThreads + 1); i++){
+      offset += suma[i];
+    }
 
   #pragma omp for schedule(static)
-  for(int i = 0; i < n; i++){
-    pr[i] += offset;
+    for(int i = 0; i < n; i++){
+      pr[i] += offset;
+    }
   }
-  
+  free(suma);
 
   // end time
   std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
