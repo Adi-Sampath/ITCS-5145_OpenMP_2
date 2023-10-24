@@ -61,30 +61,31 @@ int main (int argc, char* argv[]) {
   std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
 
   #pragma omp parallel num_threads(nbThreads)
-  {
-    int id = omp_get_thread_num();
-    int start = id * size_chunk;
-    int end = start + size_chunk;
-    if(id == nbThreads - 1){
-      end += rem;
-    }
-    int sum = 0;
-    #pragma omp for schedule(static) nowait
-      for(int i = start; i < end; i++){
-        sum += arr[i];
-        pr[i+1] = sum;
-      }
-      suma[id + 1] = sum;
-    
-    #pragma omp barrier
-      if(id > 0) {
-        for(int i = start; i < end; i++){
-          pr[i+1] += suma[id];
+    {
+        int id = omp_get_thread_num();
+        int start = id * size_chunk;
+        int end = start + size_chunk;
+        if (id == nbThreads - 1) {
+            end += rem;
         }
-      }
-  }
 
+        int sum = 0;
+        for (int i = start; i < end; i++) {
+            pr[i + 1] = sum; // Calculate the exclusive prefix sum
+            sum += arr[i];
+        }
 
+        suma[id] = sum;
+
+        #pragma omp barrier
+
+        if (id > 0) {
+            int prev_sum = suma[id - 1];
+            for (int i = start; i < end; i++) {
+                pr[i + 1] += prev_sum;
+            }
+        }
+    }
   
   // end time
   std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
