@@ -78,9 +78,9 @@ int main (int argc, char* argv[]) {
     #pragma omp for schedule(static)
     for(int i = start; i < end; i++){
       partial_sum += arr[i];
-      pr[i + 1] = partial_sum;
+      pr[i] = partial_sum;
     }
-    suma[id + 1] = partial_sum;
+    suma[id] = partial_sum;
   }
 
   #pragma omp barrier
