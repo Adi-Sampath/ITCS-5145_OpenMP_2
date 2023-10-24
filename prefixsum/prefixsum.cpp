@@ -52,7 +52,6 @@ int main (int argc, char* argv[]) {
 
   int size_chunk = n / nbThreads;
   int rem = n % nbThreads;
-  int partial_sum = 0;
 
   // start timing
   std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
@@ -62,9 +61,8 @@ int main (int argc, char* argv[]) {
     int id = omp_get_thread_num();
     int start = id * size_chunk + (id < rem ? id : rem);
     int end = start + size_chunk + (id < rem ? 1 : 0);
-    if(id == nbThreads - 1){
-      end += rem;
-    }
+    int partial_sum = 0;
+    
     for(int i = start; i < end; i++){
       partial_sum += arr[i];
       std::cout << "Element " << i << " is " << arr[i] << std::endl;
