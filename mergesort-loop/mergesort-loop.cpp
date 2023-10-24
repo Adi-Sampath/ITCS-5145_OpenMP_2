@@ -44,15 +44,15 @@ void parallelMergeSort(int arr[], int n) {
     int *left = arr;
     int *right = arr + mid;
 
-    #pragma omp parallel sections
+    #pragma omp parallel
     {
-      #pragma omp section
-      {
-        parallelMergeSort(left, mid);
-      }
-      #pragma omp section
-      {
-        parallelMergeSort(right, n - mid);
+      #pragma omp for
+      for (int i = 0; i < 2; i++) {
+        if (i == 0) {
+          parallelMergeSort(left, mid);
+        } else {
+          parallelMergeSort(right, n - mid);
+        }
       }
     }
 
