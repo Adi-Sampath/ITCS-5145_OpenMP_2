@@ -79,8 +79,8 @@ int main (int argc, char* argv[]) {
 
         #pragma omp barrier
 
-        int prev_sum = suma[id - 1];
-        for(int j = id + 1; j < nbThreads; ++j) {
+        int prev_sum = suma[id + 1];
+        for(int j = id + 1; j < nbThreads; j++) {
           std::cout << "prev_sum: " << prev_sum << "\nindex: "<< (j * size_chunk) << std::endl;
           pr[j * size_chunk] += prev_sum;
         }
