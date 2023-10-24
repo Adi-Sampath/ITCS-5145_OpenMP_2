@@ -60,8 +60,8 @@ int main (int argc, char* argv[]) {
   #pragma omp parallel num_threads(nbThreads) reduction(+:partial_sum) 
   {
     int id = omp_get_thread_num();
-    int start = id * size_chunk;
-    int end = start + size_chunk;
+    int start = id * size_chunk + (id < rem ? id : rem);
+    int end = start + size_chunk + (id < rem ? 1 : 0);
     if(id == nbThreads - 1){
       end += rem;
     }
