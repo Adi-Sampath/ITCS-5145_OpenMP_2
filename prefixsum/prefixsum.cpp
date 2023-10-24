@@ -76,8 +76,10 @@ int main (int argc, char* argv[]) {
   int total_sum = 0;
   for(int i = 0; i < nbThreads; i++){
     total_sum += suma[i];
-    if(i < n) {
-      pr[i + 1] += total_sum;
+    if(i != 0){
+      for(int j = i * size_chunk; j < (i+1) * size_chunk; j++){
+        pr[j] += total_sum;
+      }
     }
   }
   // end time
