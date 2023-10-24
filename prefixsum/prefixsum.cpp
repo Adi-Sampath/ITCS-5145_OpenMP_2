@@ -59,8 +59,8 @@ int main (int argc, char* argv[]) {
   // start timing
   std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
 
-  int partial_sum = 0;
-  #pragma omp parallel num_threads(nbThreads) reduction(+:partial_sum) 
+
+  #pragma omp parallel num_threads(nbThreads) 
   {
     int id = omp_get_thread_num();
     int start = id * size_chunk;
@@ -69,11 +69,12 @@ int main (int argc, char* argv[]) {
       end += rem;
     } 
     
+    int partial_sum = 0;
     for(int i = start; i < end; i++){
       partial_sum += arr[i];
       std::cout << "Element " << i << " is " << arr[i] << std::endl;
       std::cout << "Partial Sum is " << partial_sum << std::endl;
-      pr[i + 1] = partial_sum;
+      pr[i] = partial_sum;
     }
     suma[id] = partial_sum;
   }
