@@ -74,8 +74,7 @@ int main (int argc, char* argv[]) {
             pr[i + 1] = sum; // Calculate the exclusive prefix sum
             sum += arr[i];
         }
-
-        suma[id] = sum;
+        suma[id + 1] = sum;
 
         #pragma omp barrier
 
