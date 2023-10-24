@@ -67,7 +67,7 @@ int main (int argc, char* argv[]) {
     }
     for(int i = start; i < end; i++){
       partial_sum += arr[i];
-      pr[i+1] = partial_sum;
+      pr[i] = partial_sum;
     }
     suma[id] = partial_sum;
   }
