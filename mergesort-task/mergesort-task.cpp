@@ -102,7 +102,7 @@ int main (int argc, char* argv[]) {
     return -1;
   }
 
-  int n = 101;
+  int n = atoi(argv[1]);
   int numThreads = atoi(argv[2]);
 
   // get arr data

@@ -79,16 +79,16 @@ int main(int argc, char* argv[]) {
     generateMergeSortData(arr, n);
 
    // start timing
-  std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
+    std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
 
     // Perform parallel merge sort
     parallelMergeSort(arr, n, numThreads);
 
   // end time
-  std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
-  std::chrono::duration<double> elapsed_seconds = end - start;
+    std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end - start;
   // Print the total execution time (in sec) to the error stream
-  std::cerr << elapsed_seconds.count() << std::endl;
+    std::cerr << elapsed_seconds.count() << std::endl;
 
     // Check the result
     checkMergeSortResult(arr, n);
