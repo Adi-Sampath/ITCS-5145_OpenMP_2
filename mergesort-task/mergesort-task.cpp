@@ -79,7 +79,7 @@ void mergeSort(int* arr, int* tmp, int left, int right, int numThreads) {
             mergeSort(arr, tmp, mid + 1, right, numThreads / 2);
           
           #pragma omp taskwait
-            merge(arr, tmp, left, mid, right);
+            // merge(arr, tmp, left, mid, right);
         }
     }
 }
