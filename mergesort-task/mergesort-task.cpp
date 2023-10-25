@@ -72,10 +72,10 @@ void mergeSort(int* arr, int* tmp, int left, int right, int numThreads) {
 
       } else {
           // Parallel merge sort using OpenMP tasks.
-          #pragma omp task shared(arr, tmp) if (numThreads > 1)
+          #pragma omp task shared(arr, tmp) // if (numThreads > 1)
             mergeSort(arr, tmp, left, mid, numThreads / 2);
           
-          #pragma omp task shared(arr, tmp) if (numThreads > 1)
+          #pragma omp task shared(arr, tmp) // if (numThreads > 1)
             mergeSort(arr, tmp, mid + 1, right, numThreads / 2);
           
           #pragma omp taskwait
@@ -117,7 +117,7 @@ int main (int argc, char* argv[]) {
   #pragma omp parallel num_threads(numThreads)
     {
       #pragma omp single nowait
-        mergeSort(arr, tmp, 0, (n - 1), numThreads);
+        mergeSort(arr, tmp, 0, n, numThreads);
     }
   
   std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
