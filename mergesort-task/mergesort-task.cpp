@@ -68,6 +68,7 @@ void mergeSort(int* arr, int* tmp, int left, int right, int numThreads) {
           mergeSort(arr, tmp, left, mid, numThreads);
           mergeSort(arr, tmp, mid + 1, right, numThreads);
           merge(arr, tmp, left, mid, right);
+
       } else {
           // Parallel merge sort using OpenMP tasks.
           #pragma omp task shared(arr, tmp) if (numThreads > 1)
@@ -100,7 +101,7 @@ int main (int argc, char* argv[]) {
     return -1;
   }
 
-  int n = atoi(argv[1]);
+  int n = 101;
   int numThreads = atoi(argv[2]);
 
   // get arr data
