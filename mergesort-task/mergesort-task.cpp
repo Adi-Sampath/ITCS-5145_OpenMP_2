@@ -117,7 +117,7 @@ int main (int argc, char* argv[]) {
   #pragma omp parallel num_threads(numThreads)
     {
       #pragma omp single nowait
-        mergeSort(arr, tmp, 0, n, numThreads);
+        mergeSort(arr, tmp, 0, (n - 1), numThreads);
     }
   
   std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
