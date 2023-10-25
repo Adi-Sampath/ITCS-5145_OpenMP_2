@@ -73,13 +73,13 @@ void mergeSort(int* arr, int* tmp, int left, int right, int numThreads) {
       } else {
           // Parallel merge sort using OpenMP tasks.
           #pragma omp task shared(arr, tmp) // if (numThreads > 1)
-            mergeSort(arr, tmp, left, mid, numThreads / 2);
+            mergeSort(arr, tmp, left, mid - 1, numThreads / 2);
           
           #pragma omp task shared(arr, tmp) // if (numThreads > 1)
-            mergeSort(arr, tmp, mid + 1, right, numThreads / 2);
+            mergeSort(arr, tmp, mid, right, numThreads / 2);
           
           #pragma omp taskwait
-            // merge(arr, tmp, left, mid, right);
+            //merge(arr, tmp, left, mid, right);
         }
     }
 }
