@@ -24,6 +24,9 @@ void merge(int* arr, int* tmp, int left, int mid, int right) {
     int n1 = mid - left + 1;
     int n2 = right - mid;
 
+    std::cout << "left: " << left << " mid: " << mid << " right: " << right << std::endl;
+    
+
     // Copy data to temporary arrays L[] and R[]
     int L[n1], R[n2];
     for (i = 0; i < n1; i++)
@@ -71,10 +74,10 @@ void mergeSort(int* arr, int* tmp, int left, int right, int numThreads) {
 
       } else {
           // Parallel merge sort using OpenMP tasks.
-          #pragma omp task shared(arr, tmp) if (numThreads > 1)
+          #pragma omp task shared(arr, tmp) 
             mergeSort(arr, tmp, left, mid, numThreads / 2);
-          
-          #pragma omp task shared(arr, tmp) if (numThreads > 1)
+          #pragma omp taskwait
+          #pragma omp task shared(arr, tmp) 
             mergeSort(arr, tmp, mid + 1, right, numThreads / 2);
           
           #pragma omp taskwait
